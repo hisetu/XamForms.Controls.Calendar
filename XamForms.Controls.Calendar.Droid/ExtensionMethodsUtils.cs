@@ -1,5 +1,8 @@
-﻿using Android.Graphics;
+﻿using Android.Content;
+using Android.Content.Res;
+using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Support.V4.Graphics.Drawable;
 using System;
 
 namespace XamForms.Controls.Droid
@@ -50,6 +53,47 @@ namespace XamForms.Controls.Droid
             }
 
             return null;
+        }
+
+        public static Bitmap ToBitmap(this Drawable drawable)
+        {
+            int width = 0;
+            int height = 0;
+            Bitmap bitmap;
+            
+            if(drawable.Bounds.IsEmpty)
+            {
+                width = drawable.IntrinsicWidth;
+                height = drawable.IntrinsicHeight;
+            }
+            else
+            {
+                width = drawable.Bounds.Width();
+                height = drawable.Bounds.Height();
+            }
+
+            if(!(width > 0 && height > 0))
+            {
+                width = 100;
+                height = 100;
+            }
+            
+            bitmap = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888);
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.SetBounds(0, 0, width, height);
+            drawable.Draw(canvas);
+            return bitmap;
+        }
+
+        public static Drawable ToDrawable(this Bitmap bitmap)
+        {
+            return new BitmapDrawable(bitmap);
+        }
+
+        public static RoundedBitmapDrawable ToRoundedBitmap(this Bitmap bitmap, Context context)
+        {
+            return RoundedBitmapDrawableFactory.Create(context.Resources, bitmap);
         }
     }
 }

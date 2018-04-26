@@ -15,6 +15,8 @@ namespace XamForms.Controls.Droid
 	[Preserve(AllMembers = true)]
 	public class CalendarButtonRenderer : ButtonRenderer
 	{
+        private GradientDrawable drawable;
+
         private CalendarButton calendarButton
         {
             get => (CalendarButton)Element;
@@ -56,12 +58,11 @@ namespace XamForms.Controls.Droid
 				{
 					if (element.BackgroundImage == null)
 					{                        
-						var drawable = new GradientDrawable();
-						drawable.SetShape(element.ShapeDate.ToShapeType());
+						drawable = new GradientDrawable();						
 						var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 						drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-						drawable.SetColor(Element.BackgroundColor.ToAndroid());
-						Control.SetBackground(drawable);
+						drawable.SetColor(Element.BackgroundColor.ToAndroid());                        						
+                        SetBackgroundControl(drawable);
 					}
 					else
 					{
@@ -85,7 +86,26 @@ namespace XamForms.Controls.Droid
 			}
 		}
 
-		protected async void ChangeBackgroundImage()
+        private void SetBackgroundControl(Drawable drawable)
+        {
+            var shape = calendarButton.ShapeDate.ToShapeType();
+
+            if (drawable is GradientDrawable)
+            {
+                (drawable as GradientDrawable).SetShape(shape);
+            }
+
+            if (shape == ShapeType.Oval)
+            {
+                Control.SetBackground(drawable.ToBitmap().RoundBitmap().ToDrawable());                
+            }
+            else
+            {
+                Control.SetBackground(drawable);
+            }            
+        }
+        
+        protected async void ChangeBackgroundImage()
 		{
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundImage == null) return;
@@ -101,7 +121,7 @@ namespace XamForms.Controls.Droid
             }
 
 			d.Add(new BitmapDrawable(image));
-			var drawable = new GradientDrawable();
+			drawable = new GradientDrawable();
 			drawable.SetShape(shape);
 			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
@@ -109,7 +129,7 @@ namespace XamForms.Controls.Droid
 			d.Add(drawable);
 			var layer = new LayerDrawable(d.ToArray());
 			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
-			Control.SetBackground(layer);
+            SetBackgroundControl(layer);
 		}
 
 		protected void ChangeBackgroundPattern()
@@ -130,7 +150,7 @@ namespace XamForms.Controls.Droid
 					d.Add(new ColorDrawable(bp.Color.ToAndroid()));
 				}
 			}
-			var drawable = new GradientDrawable();
+			drawable = new GradientDrawable();
 			drawable.SetShape(element.ShapeDate.ToShapeType());
 			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
@@ -146,7 +166,7 @@ namespace XamForms.Controls.Droid
 				layer.SetLayerInset(i, l, t, r, b);
 			}
 			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
-			Control.SetBackground(layer);
+            SetBackgroundControl(layer);            
 		}
 
 		Task<Bitmap> GetBitmap(FileImageSource image)
