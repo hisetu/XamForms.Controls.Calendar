@@ -63,6 +63,17 @@ namespace XamForms.Controls
 			set { SetValue(BackgroundImageProperty, value); }	
 		}
 
+        public static readonly BindableProperty ShapeDateProperty =
+            BindableProperty.Create(nameof(ShapeDate), typeof(EnumShapeDate), typeof(Button), EnumShapeDate.None, BindingMode.TwoWay);
+        
+        public EnumShapeDate ShapeDate
+        {
+            get => (EnumShapeDate)GetValue(ShapeDateProperty);
+            set
+            {
+                SetValue(ShapeDateProperty, value);
+            }        
+        }        
     }
 }
 

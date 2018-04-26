@@ -387,9 +387,23 @@ namespace XamForms.Controls
             set { SetValue(DateCommandProperty, value); }
         }
 
-		#endregion
+        #endregion
 
-		public DateTime CalendarStartDate(DateTime date)
+        #region ShapeDate
+
+        
+        public static readonly BindableProperty ShapeDateButtonProperty =
+            BindableProperty.Create(nameof(ShapeDateButton), typeof(EnumShapeDate), typeof(Calendar), EnumShapeDate.None);
+                    
+        public EnumShapeDate ShapeDateButton
+        {
+            get => (EnumShapeDate)GetValue(ShapeDateButtonProperty);
+            set => SetValue(ShapeDateButtonProperty, value);
+        }   
+                
+        #endregion
+
+        public DateTime CalendarStartDate(DateTime date)
 		{
 			var start = date;
 			var beginOfMonth = start.Day == 1;
@@ -489,11 +503,12 @@ namespace XamForms.Controls
 							FontAttributes = DatesFontAttributes,
 							FontFamily = DatesFontFamily,
 							HorizontalOptions = LayoutOptions.FillAndExpand,
-							VerticalOptions = LayoutOptions.FillAndExpand
+							VerticalOptions = LayoutOptions.FillAndExpand,
+                            ShapeDate = ShapeDateButton,                                                        
 						});
 						var b = buttons.Last();
 						b.Clicked += DateClickedEvent;
-						mainCalendar.Children.Add(b, c, r);
+                        mainCalendar.Children.Add(b, c, r);                        						
 					}
 				}
 				MainCalendars.Add(mainCalendar);
@@ -529,7 +544,7 @@ namespace XamForms.Controls
 				var beginOfMonth = false;
 				var endOfMonth = false;
 				for (int i = 0; i < buttons.Count; i++)
-				{
+				{                    
 					endOfMonth |= beginOfMonth && start.Day == 1;
 					beginOfMonth |= start.Day == 1;
 
@@ -592,12 +607,12 @@ namespace XamForms.Controls
 				OnEndRenderCalendar?.Invoke(this, EventArgs.Empty);
 			});
         }
-
+        
         protected void SetButtonNormal(CalendarButton button)
         {
 			button.BackgroundPattern = null;
 			button.BackgroundImage = null;
-                
+                            
             Device.BeginInvokeOnMainThread(() =>
             {
                 button.IsEnabled = true;
@@ -609,7 +624,7 @@ namespace XamForms.Controls
                 button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
                 button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
 				button.FontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
-				button.IsEnabled = ShowNumOfMonths == 1 || !button.IsOutOfMonth;
+				button.IsEnabled = ShowNumOfMonths == 1 || !button.IsOutOfMonth;                
             });
         }
 

@@ -15,6 +15,11 @@ namespace XamForms.Controls.Droid
 	[Preserve(AllMembers = true)]
 	public class CalendarButtonRenderer : ButtonRenderer
 	{
+        private CalendarButton calendarButton
+        {
+            get => (CalendarButton)Element;
+        }
+
 		protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
 		{
 			base.OnElementChanged(e);
@@ -25,6 +30,7 @@ namespace XamForms.Controls.Droid
 				if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
 				Control.Text = element.TextWithoutMeasure;
 			};
+            
 			Control.SetPadding(1, 1, 1, 1);
 			Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
 		}
@@ -43,15 +49,15 @@ namespace XamForms.Controls.Droid
 			{
 				Control.SetTextColor(Element.TextColor.ToAndroid());
 			}
-
-			if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
+            
+			if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")                
 			{
 				if (element.BackgroundPattern == null)
 				{
 					if (element.BackgroundImage == null)
-					{
+					{                        
 						var drawable = new GradientDrawable();
-						drawable.SetShape(ShapeType.Rectangle);
+						drawable.SetShape(element.ShapeDate.ToShapeType());
 						var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 						drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 						drawable.SetColor(Element.BackgroundColor.ToAndroid());
@@ -86,9 +92,17 @@ namespace XamForms.Controls.Droid
 
 			var d = new List<Drawable>();
 			var image = await GetBitmap(element.BackgroundImage);
+
+            var shape = element.ShapeDate.ToShapeType();
+
+            if(shape == ShapeType.Oval)
+            {
+                image = image.RoundBitmap();
+            }
+
 			d.Add(new BitmapDrawable(image));
 			var drawable = new GradientDrawable();
-			drawable.SetShape(ShapeType.Rectangle);
+			drawable.SetShape(shape);
 			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 			drawable.SetColor(Android.Graphics.Color.Transparent);
@@ -117,7 +131,7 @@ namespace XamForms.Controls.Droid
 				}
 			}
 			var drawable = new GradientDrawable();
-			drawable.SetShape(ShapeType.Rectangle);
+			drawable.SetShape(element.ShapeDate.ToShapeType());
 			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 			drawable.SetColor(Android.Graphics.Color.Transparent);
@@ -140,7 +154,8 @@ namespace XamForms.Controls.Droid
 			var handler = new FileImageSourceHandler();
 			return handler.LoadImageAsync(image, this.Control.Context);
 		}
-	}
+        
+    }
 
 	public static class Calendar
 	{
@@ -188,7 +203,7 @@ namespace XamForms.Controls.Droid
 			{
 				y = Bounds.Bottom - Math.Abs(bounds.Bottom);
 			}
-			canvas.DrawText(Pattern.Text.ToCharArray(), 0, Pattern.Text.Length, x, y, paint);
+			canvas.DrawText(Pattern.Text.ToCharArray(), 0, Pattern.Text.Length, x, y, paint);            
 		}
 	}
 }
