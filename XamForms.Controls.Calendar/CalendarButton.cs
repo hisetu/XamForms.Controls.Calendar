@@ -73,7 +73,16 @@ namespace XamForms.Controls
             {
                 SetValue(ShapeDateProperty, value);
             }        
-        }        
+        }
+
+        public static readonly BindableProperty PatternStyleProperty =
+            BindableProperty.Create(nameof(PatternStyle) , typeof(EnumPatternStyle) , typeof(Button),  EnumPatternStyle.Strokes);
+
+        public EnumPatternStyle PatternStyle
+        {
+            get => (EnumPatternStyle)GetValue(PatternStyleProperty);
+            set => SetValue(PatternStyleProperty, value);
+        }
     }
 }
 

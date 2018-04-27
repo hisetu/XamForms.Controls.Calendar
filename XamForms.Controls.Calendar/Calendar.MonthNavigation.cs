@@ -502,6 +502,20 @@ namespace XamForms.Controls
 		{
 		    StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-ShowNumOfMonths);
 		}
-		#endregion
-	}
+        #endregion
+
+        #region SwipeCalendar
+
+        private void SwipeRightCalendar(object sender, EventArgs e)
+        {
+            RightArrowClickedEvent(this, e);
+        }
+
+        private void SwipeLeftCalendar(object sender, EventArgs e)
+        {
+            LeftArrowClickedEvent(this, e);
+        }
+
+        #endregion
+    }
 }

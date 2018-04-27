@@ -37,6 +37,7 @@
     <Compile Include="Calendar.cs">
     </Compile>
     <Compile Include="CalendarButton.cs" />
+    <Compile Include="EnumPatternStyle.cs" />
     <Compile Include="EnumShapeDate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CalandarChanges.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Calendar.MonthYearView.cs" />
     <Compile Include="Calendar.SpecialDates.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="SwipeGestureRecognizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.Selected.cs" />

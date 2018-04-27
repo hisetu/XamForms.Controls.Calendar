@@ -15,6 +15,7 @@ namespace XamForms.Controls
 		StackLayout MainView, ContentView;
         public static double GridSpace = 0;
 		public event EventHandler<EventArgs> OnStartRenderCalendar, OnEndRenderCalendar;
+        private SwipeGestureRecognizer swipeGestureRecognizer;
 
         public Calendar()
 		{
@@ -74,6 +75,8 @@ namespace XamForms.Controls
 			CalendarViewType = DateTypeEnum.Normal;
 			YearsRow = 4;
 			YearsColumn = 4;
+
+            swipeGestureRecognizer = new SwipeGestureRecognizer();
 		}
 
 		public bool IsRendering { get { return Content == null; } }
@@ -391,7 +394,7 @@ namespace XamForms.Controls
 
         #region ShapeDate
 
-        
+
         public static readonly BindableProperty ShapeDateButtonProperty =
             BindableProperty.Create(nameof(ShapeDateButton), typeof(EnumShapeDate), typeof(Calendar), EnumShapeDate.None);
                     
@@ -399,10 +402,22 @@ namespace XamForms.Controls
         {
             get => (EnumShapeDate)GetValue(ShapeDateButtonProperty);
             set => SetValue(ShapeDateButtonProperty, value);
-        }   
-                
+        }
+
         #endregion
 
+        #region PatternStyle
+
+        public static readonly BindableProperty PatternStyleButtonProperty =
+            BindableProperty.Create(nameof(PatternStyleButton), typeof(EnumPatternStyle), typeof(Calendar), EnumPatternStyle.Strokes);
+
+        public EnumPatternStyle PatternStyleButton
+        {
+            get => (EnumPatternStyle)GetValue(PatternStyleButtonProperty);
+            set => SetValue(PatternStyleButtonProperty, value);
+        }
+
+        #endregion
         public DateTime CalendarStartDate(DateTime date)
 		{
 			var start = date;
@@ -421,10 +436,12 @@ namespace XamForms.Controls
 		{
             FillCalendarWindows();
 			base.OnParentSet();
-			ChangeCalendar(CalandarChanges.All);
+            swipeGestureRecognizer.SwipeLeft += SwipeLeftCalendar;
+            swipeGestureRecognizer.SwipeRight += SwipeRightCalendar;            
+            ChangeCalendar(CalandarChanges.All);
 		}
-
-		protected Task FillCalendar()
+        
+        protected Task FillCalendar()
 		{
 			return Task.Factory.StartNew(() =>
 			{
@@ -436,7 +453,7 @@ namespace XamForms.Controls
 		{
 			CreateWeeknumbers();
 			CreateButtons();
-			ShowHideElements();
+			ShowHideElements();            
 		}
 
 		protected void CreateWeeknumbers()
@@ -504,7 +521,8 @@ namespace XamForms.Controls
 							FontFamily = DatesFontFamily,
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.FillAndExpand,
-                            ShapeDate = ShapeDateButton,                                                        
+                            ShapeDate = ShapeDateButton, 
+                            PatternStyle = PatternStyleButton
 						});
 						var b = buttons.Last();
 						b.Clicked += DateClickedEvent;
@@ -644,7 +662,7 @@ namespace XamForms.Controls
 
 #endregion
 
-        public event EventHandler<DateTimeEventArgs> DateClicked;
+        public event EventHandler<DateTimeEventArgs> DateClicked;        
     }
 }
 
