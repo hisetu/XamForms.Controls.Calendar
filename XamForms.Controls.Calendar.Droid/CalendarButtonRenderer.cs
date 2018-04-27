@@ -137,39 +137,90 @@ namespace XamForms.Controls.Droid
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundPattern == null || Control.Width == 0) return;
 
-			var d = new List<Drawable>();
-			for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
-			{
-				var bp = element.BackgroundPattern.Pattern[i];
-				if (!string.IsNullOrEmpty(bp.Text))
-				{
-					d.Add(new TextDrawable(bp.Color.ToAndroid()) { Pattern = bp });
-				}
-				else
-				{
-					d.Add(new ColorDrawable(bp.Color.ToAndroid()));
-				}
-			}
-			drawable = new GradientDrawable();
-			drawable.SetShape(element.ShapeDate.ToShapeType());
-			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
-			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-			drawable.SetColor(Android.Graphics.Color.Transparent);
-			d.Add(drawable);
-			var layer = new LayerDrawable(d.ToArray());
-			for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
-			{
-				var l = (int)Math.Ceiling(Control.Width * element.BackgroundPattern.GetLeft(i));
-				var t = (int)Math.Ceiling(Control.Height * element.BackgroundPattern.GetTop(i));
-				var r = (int)Math.Ceiling(Control.Width * (1 - element.BackgroundPattern.Pattern[i].WidthPercent)) - l;
-				var b = (int)Math.Ceiling(Control.Height * (1 - element.BackgroundPattern.Pattern[i].HightPercent)) - t;
-				layer.SetLayerInset(i, l, t, r, b);
-			}
-			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
+            Drawable layer = null;
+
+            if (element.PatternStyle == EnumPatternStyle.Strokes)
+            {
+                layer = CreateStrokePatterns(element);
+            }
+            else if(element.PatternStyle == EnumPatternStyle.Circles)
+            {
+                layer = CreateCirclePatterns(element);
+            }
+						
             SetBackgroundControl(layer);            
 		}
 
-		Task<Bitmap> GetBitmap(FileImageSource image)
+        private Drawable CreateCirclePatterns(CalendarButton element)
+        {            
+            var bitmap = Bitmap.CreateBitmap(100, 100, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(bitmap);
+
+            int radius = 7;
+            int height = 85;
+            int startX = 40;
+
+            for (int i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+            {
+                var backgroundPattern = element.BackgroundPattern.Pattern[i];
+
+                Paint paint = new Paint();
+                paint.SetStyle(Paint.Style.Fill);                
+                paint.Color = backgroundPattern.Color.ToAndroid();
+                paint.AntiAlias = true;
+
+                Paint strokePaint = new Paint();
+                strokePaint.SetStyle(Paint.Style.Stroke);
+                strokePaint.Color = Xamarin.Forms.Color.White.ToAndroid();
+                strokePaint.StrokeWidth = 2;
+                strokePaint.StrokeCap = Paint.Cap.Round;
+                strokePaint.AntiAlias = true;
+                                
+                canvas.DrawCircle(startX, height, radius, paint);
+                canvas.DrawCircle(startX, height, radius, strokePaint);
+                startX += 8;
+            }
+
+            return new BitmapDrawable(bitmap);
+        }
+
+        private LayerDrawable CreateStrokePatterns(CalendarButton element)
+        {
+            var d = new List<Drawable>();
+
+            for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+            {
+                var bp = element.BackgroundPattern.Pattern[i];
+                if (!string.IsNullOrEmpty(bp.Text))
+                {
+                    d.Add(new TextDrawable(bp.Color.ToAndroid()) { Pattern = bp });
+                }
+                else
+                {
+                    d.Add(new ColorDrawable(bp.Color.ToAndroid()));
+                }
+            }
+            drawable = new GradientDrawable();
+            drawable.SetShape(element.ShapeDate.ToShapeType());
+            var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+            drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
+            drawable.SetColor(Android.Graphics.Color.Transparent);
+            d.Add(drawable);
+            var layer = new LayerDrawable(d.ToArray());
+            for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+            {
+                var l = (int)Math.Ceiling(Control.Width * element.BackgroundPattern.GetLeft(i));
+                var t = (int)Math.Ceiling(Control.Height * element.BackgroundPattern.GetTop(i));
+                var r = (int)Math.Ceiling(Control.Width * (1 - element.BackgroundPattern.Pattern[i].WidthPercent)) - l;
+                var b = (int)Math.Ceiling(Control.Height * (1 - element.BackgroundPattern.Pattern[i].HightPercent)) - t;
+                layer.SetLayerInset(i, l, t, r, b);
+            }
+            layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
+
+            return layer;
+        }
+
+        Task<Bitmap> GetBitmap(FileImageSource image)
 		{
 			var handler = new FileImageSourceHandler();
 			return handler.LoadImageAsync(image, this.Control.Context);
