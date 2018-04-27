@@ -40,6 +40,11 @@ namespace XamForms.Controls.iOS
 			{ 
 				DrawBackgroundImage();
 			}
+
+            if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
+            {
+                SetNeedsDisplay();
+            }
         }
 
 		public override void Draw(CGRect rect)
@@ -67,35 +72,80 @@ namespace XamForms.Controls.iOS
 		}
 
 		protected void DrawBackgroundPattern()
-		{
+		{            
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundPattern == null || Control.Frame.Width == 0) return;
 
-			UIImage image;
-			UIGraphics.BeginImageContext(Control.Frame.Size);
-			using (CGContext g = UIGraphics.GetCurrentContext())
-			{
-				for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
-				{
-					var p = element.BackgroundPattern.Pattern[i];
-					g.SetFillColor(p.Color.ToCGColor());
-					var l = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.GetLeft(i));
-					var t = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.GetTop(i));
-					var w = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.Pattern[i].WidthPercent);
-					var h = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.Pattern[i].HightPercent);
-					var r = new CGRect { X = l, Y = t, Width = w, Height = h };
-					g.FillRect(r);
-                    DrawText(g, p, r);
-				}
+            UIImage image = null;
 
-				image = UIGraphics.GetImageFromCurrentImageContext();
-			}
-			UIGraphics.EndImageContext();
+            if(element.PatternStyle == EnumPatternStyle.Strokes)
+            {
+                image = CreateStrokesPatterns(element);
+            }
+            else if (element.PatternStyle == EnumPatternStyle.Circles)
+            {
+                image = CreateCirclePatterns(element);
+            }
+
+			
 			Control.SetBackgroundImage(image, UIControlState.Normal);
 			Control.SetBackgroundImage(image, UIControlState.Disabled);
 		}
+        
+        private UIImage CreateStrokesPatterns(CalendarButton element)
+        {            
+            UIImage image;
+            UIGraphics.BeginImageContext(Control.Frame.Size);
+            using (CGContext g = UIGraphics.GetCurrentContext())
+            {
+                for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+                {
+                    var p = element.BackgroundPattern.Pattern[i];
+                    g.SetFillColor(p.Color.ToCGColor());
+                    var l = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.GetLeft(i));
+                    var t = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.GetTop(i));
+                    var w = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.Pattern[i].WidthPercent);
+                    var h = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.Pattern[i].HightPercent);
+                    var r = new CGRect { X = l, Y = t, Width = w, Height = h };
+                    g.FillRect(r);
+                    DrawText(g, p, r);
+                }
 
-		Task<UIImage> GetImage(FileImageSource image)
+                image = UIGraphics.GetImageFromCurrentImageContext();
+            }
+            UIGraphics.EndImageContext();
+
+            return image;
+        }
+
+        private UIImage CreateCirclePatterns(CalendarButton element)
+        {
+            UIImage image = null;
+            UIGraphics.BeginImageContext(Control.Frame.Size);
+            int height = 32;
+            int startX = 12;
+
+            using (CGContext g = UIGraphics.GetCurrentContext())
+            {
+                for(int i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+                {
+                    var backGroundPattern = element.BackgroundPattern.Pattern[i];
+                    g.SetFillColor(backGroundPattern.Color.ToCGColor());
+                    g.SetStrokeColor(Color.White.ToCGColor());
+                    g.FillEllipseInRect(new CGRect(startX, height, 7, 7));
+
+                    startX += 4;
+                }
+
+                image = UIGraphics.GetImageFromCurrentImageContext();
+            }
+
+            UIGraphics.EndImageContext();
+
+            return image;
+        }
+
+        Task<UIImage> GetImage(FileImageSource image)
 		{
 			var handler = new FileImageSourceHandler();
 			return handler.LoadImageAsync(image);
