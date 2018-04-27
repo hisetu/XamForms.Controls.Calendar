@@ -47,11 +47,17 @@ namespace XamForms.Controls.iOS
 			base.Draw(rect);
 			Control.SetBackgroundImage(null, UIControlState.Normal);
 			Control.SetBackgroundImage(null, UIControlState.Disabled);
+            SetShape();
 			DrawBackgroundImage();
 			DrawBackgroundPattern();
 		}
 
-		protected async void DrawBackgroundImage()
+        private void SetShape()
+        {
+            Control.Layer.CornerRadius = 20;
+        }
+
+        protected async void DrawBackgroundImage()
 		{
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundImage == null) return;
