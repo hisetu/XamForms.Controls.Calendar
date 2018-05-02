@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
 using Xamarin.Forms;
+
 using System;
 
 [assembly: Xamarin.Forms.ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
@@ -35,6 +36,7 @@ namespace XamForms.Controls.Droid
             
 			Control.SetPadding(1, 1, 1, 1);
 			Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
+            AlignButtonText();
 		}
 
 		protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -85,8 +87,13 @@ namespace XamForms.Controls.Droid
 			{
 				ChangeBackgroundImage();
 			}
-		}
 
+            if(e.PropertyName == CalendarButton.ButtonTextAlignProperty.PropertyName)
+            {
+                AlignButtonText();
+            }
+		}
+        
         private void SetBackgroundControl(Drawable drawable)
         {
             var shape = calendarButton.ShapeDate.ToShapeType();            
@@ -135,7 +142,13 @@ namespace XamForms.Controls.Droid
             SetBackgroundControl(layer);
 		}
 
-		protected void ChangeBackgroundPattern()
+        private void AlignButtonText()
+        {            
+            
+            Control.Gravity = calendarButton.ButtonTextAlign.ToAndroid();
+        }
+
+        protected void ChangeBackgroundPattern()
 		{
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundPattern == null || Control.Width == 0) return;

@@ -1,10 +1,11 @@
 ﻿using System;
 using Xamarin.Forms;
+using TextAlign = XamForms.Controls.TextAlign;
 
 namespace XamForms.Controls
 {
     public class CalendarButton : Button
-    {
+    {        
 		public static readonly BindableProperty DateProperty =
             BindableProperty.Create(nameof(Date), typeof(DateTime?), typeof(CalendarButton), null);
 
@@ -82,6 +83,15 @@ namespace XamForms.Controls
         {
             get => (EnumPatternStyle)GetValue(PatternStyleProperty);
             set => SetValue(PatternStyleProperty, value);
+        }
+
+        public static readonly BindableProperty ButtonTextAlignProperty =
+            BindableProperty.Create(nameof(TextAlignment), typeof(TextAlign), typeof(CalendarButton), TextAlign.Middle);
+
+        public TextAlign ButtonTextAlign
+        {
+            get => (TextAlign)GetValue(ButtonTextAlignProperty);
+            set => SetValue(ButtonTextAlignProperty, value);
         }
     }
 }

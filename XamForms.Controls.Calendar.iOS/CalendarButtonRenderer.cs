@@ -18,6 +18,16 @@ namespace XamForms.Controls.iOS
 	[Preserve(AllMembers = true)]
     public class CalendarButtonRenderer : ButtonRenderer
     {
+        protected override void OnElementChanged(ElementChangedEventArgs<Button> e)
+        {
+            base.OnElementChanged(e);
+
+            if (Control == null || Element == null)
+                return;
+
+            SetTextAlignment((Element as CalendarButton).ButtonTextAlign);
+        }
+
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
@@ -45,9 +55,14 @@ namespace XamForms.Controls.iOS
             {
                 SetNeedsDisplay();
             }
-        }
 
-		public override void Draw(CGRect rect)
+            if(e.PropertyName == CalendarButton.ButtonTextAlignProperty.PropertyName)
+            {
+                SetTextAlignment(element.ButtonTextAlign);
+            }
+        }
+        
+        public override void Draw(CGRect rect)
 		{
 			base.Draw(rect);
 			Control.SetBackgroundImage(null, UIControlState.Normal);
@@ -184,6 +199,53 @@ namespace XamForms.Controls.iOS
 			g.ShowTextAtPoint(x, Bounds.Height - y, p.Text);
 			g.RestoreState();
 		}
+
+        private void SetTextAlignment(TextAlign textAlign)
+        {
+            switch (textAlign)
+            {
+                case TextAlign.CenterBottom:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Bottom;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
+                    break;
+                case TextAlign.CenterTop:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Top;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
+                    break;
+                case TextAlign.LeftBottom:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Bottom;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Leading;
+                    break;
+                case TextAlign.LeftCenter:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
+                    break;
+                case TextAlign.LeftTop:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Top;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
+                    break;
+                case TextAlign.Middle:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
+                    break;
+                case TextAlign.RightBottom:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Bottom;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
+                    break;
+                case TextAlign.RightCenter:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
+                    break;
+                case TextAlign.RightTop:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Top;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
+                    break;                        
+                default:
+                    Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
+                    Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
+                    break;
+            }
+        }
     }
 
 	public static class Calendar

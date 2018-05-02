@@ -55,12 +55,14 @@ namespace XamForms.Controls
 			ContentView = new StackLayout
 			{
 				Padding = 0,
-				Orientation = StackOrientation.Vertical
+				Orientation = StackOrientation.Vertical,
+                BackgroundColor = Color.Orange
 			};
 			MainView = new StackLayout {
 				Padding = 0,
 				Orientation = StackOrientation.Vertical,
-				Children = { MonthNavigationLayout, ContentView }
+				Children = { MonthNavigationLayout, ContentView },
+                BackgroundColor = Color.Orange
 			};
 
 
@@ -75,7 +77,7 @@ namespace XamForms.Controls
 			CalendarViewType = DateTypeEnum.Normal;
 			YearsRow = 4;
 			YearsColumn = 4;
-
+            
             swipeGestureRecognizer = new SwipeGestureRecognizer();
 		}
 
@@ -418,6 +420,19 @@ namespace XamForms.Controls
         }
 
         #endregion
+
+        #region ButtonTextAling
+
+        public static readonly BindableProperty ButtonTextAlignProperty =
+            BindableProperty.Create(nameof(TextAlignment), typeof(TextAlign), typeof(CalendarButton), TextAlign.Middle);
+
+        public TextAlign ButtonTextAlign
+        {
+            get => (TextAlign)GetValue(ButtonTextAlignProperty);
+            set => SetValue(ButtonTextAlignProperty, value);
+        }
+
+        #endregion
         public DateTime CalendarStartDate(DateTime date)
 		{
 			var start = date;
@@ -498,7 +513,7 @@ namespace XamForms.Controls
 			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
 			buttons.Clear();
-			MainCalendars.Clear();
+			MainCalendars.Clear();            
 			for (var i = 0; i < ShowNumOfMonths; i++)
 			{
 				var mainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = GridSpace, ColumnSpacing = GridSpace, Padding = 1, BackgroundColor = BorderColor };
@@ -522,7 +537,8 @@ namespace XamForms.Controls
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.FillAndExpand,
                             ShapeDate = ShapeDateButton, 
-                            PatternStyle = PatternStyleButton
+                            PatternStyle = PatternStyleButton,
+                            ButtonTextAlign = ButtonTextAlign
 						});
 						var b = buttons.Last();
 						b.Clicked += DateClickedEvent;

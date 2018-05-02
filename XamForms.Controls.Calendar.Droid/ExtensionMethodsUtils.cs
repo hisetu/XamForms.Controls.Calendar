@@ -3,6 +3,7 @@ using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Support.V4.Graphics.Drawable;
+using Android.Views;
 using System;
 
 namespace XamForms.Controls.Droid
@@ -95,6 +96,41 @@ namespace XamForms.Controls.Droid
         public static RoundedBitmapDrawable ToRoundedBitmap(this Bitmap bitmap, Context context)
         {
             return RoundedBitmapDrawableFactory.Create(context.Resources, bitmap);
+        }
+
+        public static GravityFlags ToAndroid(this XamForms.Controls.TextAlign textAlignment)
+        {
+            switch(textAlignment)
+            {
+                case TextAlign.CenterBottom:
+                    return GravityFlags.Bottom | GravityFlags.Center;
+                case TextAlign.CenterTop:
+                    return GravityFlags.Top | GravityFlags.Center;
+
+                case TextAlign.LeftBottom:
+                    return GravityFlags.Left | GravityFlags.Bottom;
+
+                case TextAlign.LeftCenter:
+                    return GravityFlags.Left | GravityFlags.Center;
+
+                case TextAlign.LeftTop:
+                    return GravityFlags.Left | GravityFlags.Top;
+
+                case TextAlign.Middle:
+                    return GravityFlags.Center;
+
+                case TextAlign.RightBottom:
+                    return GravityFlags.Right | GravityFlags.Bottom;
+
+                case TextAlign.RightCenter:
+                    return GravityFlags.Right | GravityFlags.Center;
+
+                case TextAlign.RightTop:
+                    return GravityFlags.Right | GravityFlags.Top;
+
+                default:
+                    return GravityFlags.Center;
+            }
         }
     }
 }
