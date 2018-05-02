@@ -61,7 +61,8 @@ namespace XamForms.Controls.Droid
 						drawable = new GradientDrawable();						
 						var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
 						drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-						drawable.SetColor(Element.BackgroundColor.ToAndroid());                        						
+                        drawable.SetColor(Element.BackgroundColor.ToAndroid());                        						
+                        
                         SetBackgroundControl(drawable);
 					}
 					else
@@ -88,13 +89,13 @@ namespace XamForms.Controls.Droid
 
         private void SetBackgroundControl(Drawable drawable)
         {
-            var shape = calendarButton.ShapeDate.ToShapeType();
+            var shape = calendarButton.ShapeDate.ToShapeType();            
 
             if (drawable is GradientDrawable)
             {
                 var gDrawable = (GradientDrawable)drawable;
                 gDrawable.SetShape(shape);
-                gDrawable.SetColor(Android.Graphics.Color.Transparent);                
+                gDrawable.SetColor(Element.BackgroundColor.ToAndroid());                                               
             }
 
             if (shape == ShapeType.Oval)

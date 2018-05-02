@@ -52,6 +52,7 @@ namespace XamForms.Controls.iOS
 			base.Draw(rect);
 			Control.SetBackgroundImage(null, UIControlState.Normal);
 			Control.SetBackgroundImage(null, UIControlState.Disabled);
+            Control.BackgroundColor = Element.BackgroundColor.ToUIColor();
             SetShape();
 			DrawBackgroundImage();
 			DrawBackgroundPattern();
@@ -86,7 +87,6 @@ namespace XamForms.Controls.iOS
             {
                 image = CreateCirclePatterns(element);
             }
-
 			
 			Control.SetBackgroundImage(image, UIControlState.Normal);
 			Control.SetBackgroundImage(image, UIControlState.Disabled);
