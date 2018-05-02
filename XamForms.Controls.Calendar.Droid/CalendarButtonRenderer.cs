@@ -41,7 +41,7 @@ namespace XamForms.Controls.Droid
 		{
 			base.OnElementPropertyChanged(sender, e);
 			var element = Element as CalendarButton;
-
+            
 			if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
 			{
 				Control.Text = element.TextWithoutMeasure;
@@ -92,11 +92,13 @@ namespace XamForms.Controls.Droid
 
             if (drawable is GradientDrawable)
             {
-                (drawable as GradientDrawable).SetShape(shape);
+                var gDrawable = (GradientDrawable)drawable;
+                gDrawable.SetShape(shape);
+                gDrawable.SetColor(Android.Graphics.Color.Transparent);                
             }
 
             if (shape == ShapeType.Oval)
-            {
+            {                
                 Control.SetBackground(drawable.ToBitmap().RoundBitmap().ToDrawable());                
             }
             else

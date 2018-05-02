@@ -44,6 +44,7 @@ namespace XamForms.Controls.Droid
                     paint.SetXfermode(new PorterDuffXfermode(PorterDuff.Mode.SrcIn));
 
                     canvas.DrawBitmap(bitmap, rect, rectF, paint);
+                   bitmap.Dispose();
                     return output;
                 }
                 catch 
