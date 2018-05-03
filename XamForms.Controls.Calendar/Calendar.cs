@@ -55,14 +55,12 @@ namespace XamForms.Controls
 			ContentView = new StackLayout
 			{
 				Padding = 0,
-				Orientation = StackOrientation.Vertical,
-                BackgroundColor = Color.Orange
+				Orientation = StackOrientation.Vertical,                
 			};
 			MainView = new StackLayout {
 				Padding = 0,
 				Orientation = StackOrientation.Vertical,
-				Children = { MonthNavigationLayout, ContentView },
-                BackgroundColor = Color.Orange
+				Children = { MonthNavigationLayout, ContentView },                
 			};
 
 
