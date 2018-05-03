@@ -118,11 +118,39 @@ namespace XamForms.Controls
 			get { return GetValue(WeekdaysFormatProperty) as string; }
 			set { SetValue(WeekdaysFormatProperty, value); }
 		}
-		#endregion
+        #endregion
 
-		#region WeekdaysFontAttributes
+        #region WeekdaysFormatLength
 
-		public static readonly BindableProperty WeekdaysFontAttributesProperty =
+        public static readonly BindableProperty WeekdaysFormatLengthProperty =
+            BindableProperty.Create(nameof(WeekdaysFormatLength), typeof(int), typeof(Calendar), 3,
+                propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
+        
+        public int WeekdaysFormatLength
+        {
+            get => (int)GetValue(WeekdaysFormatLengthProperty);
+            set => SetValue(WeekdaysFormatLengthProperty, value);
+        }
+
+        #endregion
+
+        #region WeekdaysUpperCase
+
+        public static readonly BindableProperty WeekdaysUpperCaseProperty =
+            BindableProperty.Create(nameof(WeekdaysUpperCase), typeof(bool), typeof(Calendar), false,
+                propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
+
+        public bool WeekdaysUpperCase
+        {
+            get => (bool)GetValue(WeekdaysUpperCaseProperty);
+            set => SetValue(WeekdaysUpperCaseProperty, value);
+        }
+
+        #endregion
+
+        #region WeekdaysFontAttributes
+
+        public static readonly BindableProperty WeekdaysFontAttributesProperty =
 			BindableProperty.Create(nameof(WeekdaysFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
 
@@ -167,9 +195,20 @@ namespace XamForms.Controls
 			var start = CalendarStartDate(StartDate);
 			for (int i = 0; i < dayLabels.Count; i++)
 			{
-				dayLabels[i].Text = start.ToString(WeekdaysFormat);
+                dayLabels[i].Text = FormatDayLabel(start);
 				start = start.AddDays(1);
 			}
 		}
+
+        private string FormatDayLabel(DateTime start)
+        {
+            var dayLabel = start.ToString(WeekdaysFormat).Substring(0, WeekdaysFormatLength);
+            if (WeekdaysUpperCase)
+            {
+                dayLabel = dayLabel.FirstCharToUpper();
+            }
+
+            return dayLabel;                        
+        }
 	}
 }

@@ -582,7 +582,7 @@ namespace XamForms.Controls
 
 					if (i < dayLabels.Count && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
 					{
-						dayLabels[i].Text = start.ToString(WeekdaysFormat);
+                        dayLabels[i].Text = FormatDayLabel(start);
 					}
 
 					ChangeWeekNumbers(start, i);

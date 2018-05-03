@@ -39,6 +39,7 @@
     <Compile Include="CalendarButton.cs" />
     <Compile Include="EnumPatternStyle.cs" />
     <Compile Include="EnumShapeDate.cs" />
+    <Compile Include="ExtensionUtilsString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CalandarChanges.cs" />
     <Compile Include="DateTimeEventArgs.cs" />
