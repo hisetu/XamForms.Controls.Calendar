@@ -19,15 +19,10 @@ namespace XamForms.Controls
 
         public Calendar()
 		{
-			TitleLeftArrow = new CalendarButton
-			{
-				FontAttributes = FontAttributes.Bold,
-				BackgroundColor = Color.Transparent,
-				FontSize = 24,
-				Text = "❰",
-				TextColor = Color.FromHex("#c82727")
-			};
-			TitleLabel = new Label { 
+			TitleLeftArrow = InstanceTitleLeftButton();
+            TitleRightArrow = InstanceTitleRightButton();
+
+            TitleLabel = new Label { 
 				FontSize = 24,
 				VerticalTextAlignment = TextAlignment.Center,
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -36,14 +31,7 @@ namespace XamForms.Controls
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				Text = ""
 			};
-			TitleRightArrow = new CalendarButton
-			{
-				FontAttributes = FontAttributes.Bold,
-				BackgroundColor = Color.Transparent,
-				FontSize = 24,
-				Text = "❱",
-				TextColor = Color.FromHex("#c82727")
-			};
+            
 			MonthNavigationLayout = new StackLayout
 			{
 				Padding = 0,
@@ -419,10 +407,10 @@ namespace XamForms.Controls
 
         #endregion
 
-        #region ButtonTextAling
+        #region ButtonTextAlign
 
         public static readonly BindableProperty ButtonTextAlignProperty =
-            BindableProperty.Create(nameof(TextAlignment), typeof(TextAlign), typeof(CalendarButton), TextAlign.Middle);
+            BindableProperty.Create(nameof(TextAlignment), typeof(TextAlign), typeof(Calendar), TextAlign.Middle);
 
         public TextAlign ButtonTextAlign
         {
@@ -431,6 +419,61 @@ namespace XamForms.Controls
         }
 
         #endregion
+
+        #region IconTitleLeftButton
+
+        public static readonly BindableProperty IconTitleLeftButtonProperty =
+            BindableProperty.Create(nameof(IconTitleLeftButton), typeof(string), typeof(Calendar), string.Empty,
+                propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeIconTitleLeft((string)newValue));
+        
+        public string IconTitleLeftButton
+        {
+            get => (string)GetValue(IconTitleLeftButtonProperty);
+            set => SetValue(IconTitleLeftButtonProperty, value);
+        }
+
+        private void ChangeIconTitleLeft(string newValue)
+        {
+            if (string.IsNullOrWhiteSpace(newValue))
+            {
+                TitleLeftArrow.Text = "❰";
+            }
+            else
+            {
+                TitleLeftArrow.Text = string.Empty;
+                TitleLeftArrow.Image = newValue;
+            }
+        }
+
+        #endregion
+
+        #region IconTitleRightButton
+
+        public static readonly BindableProperty IconTitleRightButtonProperty =
+            BindableProperty.Create(nameof(IconTitleRightButton), typeof(string), typeof(Calendar), string.Empty,
+                propertyChanged:(bindable, oldValue, newValue) => (bindable as Calendar).ChangeRightButton((string)newValue));
+
+        private void ChangeRightButton(string newValue)
+        {
+            if (string.IsNullOrEmpty(newValue))
+            {
+                TitleRightArrow.Text = "❱";
+            }
+            else
+            {
+                TitleRightArrow.Text = string.Empty;
+                TitleRightArrow.Image = newValue;
+            }
+        }
+
+        public string IconTitleRightButton
+        {
+            get => (string)GetValue(IconTitleRightButtonProperty);
+            set => SetValue(IconTitleRightButtonProperty, value);
+        }
+
+        #endregion
+
         public DateTime CalendarStartDate(DateTime date)
 		{
 			var start = date;
@@ -673,6 +716,34 @@ namespace XamForms.Controls
 				SelectedDate = selectedDate;
 			}
 		}
+        
+        protected CalendarButton InstanceTitleLeftButton()
+        {
+            var leftButton = new CalendarButton
+            {
+                FontAttributes = FontAttributes.Bold,
+                BackgroundColor = Color.Transparent,                
+                FontSize = 24,
+                Text = "❰",
+                TextColor = Color.FromHex("#c82727")
+            };
+            
+            return leftButton;
+        }
+
+        protected CalendarButton InstanceTitleRightButton()
+        {
+            var rightButton = new CalendarButton
+            {
+                FontAttributes = FontAttributes.Bold,
+                BackgroundColor = Color.Transparent,                
+                FontSize = 24,                
+                TextColor = Color.FromHex("#c82727"),
+                Text = "❱"
+            };
+            
+            return rightButton;
+        }
 
 #endregion
 

@@ -93,6 +93,7 @@ namespace XamForms.Controls
             get => (TextAlign)GetValue(ButtonTextAlignProperty);
             set => SetValue(ButtonTextAlignProperty, value);
         }
+                
     }
 }
 
