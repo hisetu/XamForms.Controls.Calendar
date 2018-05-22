@@ -13,31 +13,43 @@ namespace CalendarDemo
 
 		public App()
         {
-			calendar = new Calendar
-			{
-				MaxDate = DateTime.Now.AddDays(30),
-				MinDate = DateTime.Now.AddDays(-1),
-				//DisableDatesLimitToMaxMinRange = true,
-				MultiSelectDates = false,
-				DisableAllDates = false,
-				WeekdaysShow = true,
-				ShowNumberOfWeek = true,
+            
+
+            calendar = new Calendar
+            {                
+                MaxDate = DateTime.Now.AddDays(30),
+                MinDate = DateTime.Now.AddDays(-2),
+                //DisableDatesLimitToMaxMinRange = true,
+                MultiSelectDates = false,
+                DisableAllDates = false,
+                WeekdaysShow = true,
+                ShowNumberOfWeek = true,
                 //BorderWidth = 1,
                 //BorderColor = Color.Transparent,
                 //OuterBorderWidth = 0,
                 //SelectedBorderWidth = 1,
-				ShowNumOfMonths = 1,
-				EnableTitleMonthYearView = true,
-				WeekdaysTextColor = Color.Teal,
+                DatesFontSize = 10,        
+                DisabledFontSize = 10,                
+				ShowNumOfMonths = 1,                
+				EnableTitleMonthYearView = true,				
 				StartDay = DayOfWeek.Monday,
-				SelectedTextColor = Color.Fuchsia,
+                ShapeDateButton = EnumShapeDate.Oval,
+                PatternStyleButton = EnumPatternStyle.Circles,
+                WeekdaysFormatLength = 2,
+                WeekdaysUpperCase = true,
+				SelectedTextColor = Color.Fuchsia,         
+                ButtonTextAlign = TextAlign.CenterBottom,
+                TitleLabelFormat = "MMMM yyyy",
+                IconTitleLeftButton = "icon.png",
+                IconTitleRightButton = "icon.png",
 				SpecialDates = new List<SpecialDate>{
-					new SpecialDate(DateTime.Now.AddDays(2)) { BackgroundColor = Color.Green, TextColor = Color.Accent, BorderColor = Color.Lime, BorderWidth=8, Selectable = true },
-					new SpecialDate(DateTime.Now.AddDays(3))
+					new SpecialDate(DateTime.Now) { BackgroundColor = Color.Transparent, TextColor = Color.Accent, BorderColor = Color.Lime, BorderWidth=8, Selectable = true },
+                    
+					new SpecialDate(DateTime.Now.AddDays(1))
 					{
-						BackgroundColor = Color.Green,
+						BackgroundColor = Color.Transparent,
 						TextColor = Color.Blue,
-						Selectable = true,
+						Selectable = true,                        
 						BackgroundPattern = new BackgroundPattern(1)
 						{
 							Pattern = new List<Pattern>
@@ -49,11 +61,13 @@ namespace CalendarDemo
 							}
 						}
 					},
-					new SpecialDate(DateTime.Now.AddDays(4))
+                    /*
+					new SpecialDate(DateTime.Now.AddDays(1))
 					{
 						Selectable = true,
 						BackgroundImage = FileImageSource.FromFile("icon.png") as FileImageSource
-					}
+					} 
+                    */
 				}
 			};
 			/*
@@ -122,6 +136,7 @@ namespace CalendarDemo
 			//calendar.SetBinding(Calendar.SpecialDatesProperty, nameof(_vm.Attendances));
 			c2.BindingContext = _vm;
 
+            
             // The root page of your application
             MainPage = new ContentPage
             {
@@ -135,6 +150,9 @@ namespace CalendarDemo
 					}
                 }
             };
+            
+
+            
 		}
 
         protected override void OnStart()
