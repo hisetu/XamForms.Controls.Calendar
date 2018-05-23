@@ -9,6 +9,7 @@ namespace XamForms.Controls
 		public SpecialDate(DateTime date)
 		{
 			Date = date;
+            HasChanges = true;
 		}
 
 		public DateTime Date { get; set; }
@@ -30,7 +31,9 @@ namespace XamForms.Controls
 		/// </summary>
 		/// <value>The background pattern.</value>
 		public BackgroundPattern BackgroundPattern{ get; set; }
-	}
+
+        public bool HasChanges { get; set; }
+    }
 
 	public class BackgroundPattern
 	{
@@ -40,14 +43,14 @@ namespace XamForms.Controls
 			this.columns = columns;
 		}
 
-		public List<Pattern> Pattern;
+		public List<Pattern> Patterns;
 
 		public float GetTop(int t)
 		{
 			float r = 0;
 			for (int i = t-columns; i > -1; i-=columns)
 			{
-				r += Pattern[i].HightPercent;
+				r += Patterns[i].HightPercent;
 			}
 			return r;
 		}
@@ -57,7 +60,7 @@ namespace XamForms.Controls
 			float r = 0;
 			for (int i = l-1; i > -1 && (i+1) % columns != 0; i--)
 			{
-				r += Pattern[i].WidthPercent;
+				r += Patterns[i].WidthPercent;
 			}
 			return r;
 		}
@@ -87,7 +90,7 @@ namespace XamForms.Controls
 		public float WidthPercent;
 		public float HightPercent;
 		public Color Color;
-
+        public string image;
 		public string Text;
 		public Color TextColor;
 		public float TextSize;
